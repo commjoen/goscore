@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func (s scoreServer) handleScoreSubmit() http.HandlerFunc {
-	s.logger.Printf("Parsing goscore form here")
+func (s scoreServer) handleLeftExercise1() http.HandlerFunc {
+	s.logger.Printf("Parsing exercise1 left form here")
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "404: only posts live here", http.StatusNotFound)
@@ -19,12 +19,7 @@ func (s scoreServer) handleScoreSubmit() http.HandlerFunc {
 			return
 		}
 		value := strings.ToLower(r.FormValue("formValue"))
-		s.logger.Printf("we got response for scoring, value: " + value)
-		switch value {
-		case "alfalfa":
-			w.Write([]byte("This is their favorite food, not the solution"))
-		default:
-			w.Write([]byte("Try harder"))
-		}
+		s.logger.Printf("we got response for exercise value 1, value: " + value)
+		w.Write([]byte(value))
 	}
 }

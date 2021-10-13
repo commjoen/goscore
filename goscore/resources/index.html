@@ -17,6 +17,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
+
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -28,36 +30,66 @@
         <p class="lead">This is our first welcome page, let's see if it works.</p>
         <hr class="my-4">
         <p>The idea of this app is that you can do challenges as shown below: there is a "go left" which has a
-            vulnerability. A "go-right" which shows a correct implementation and a "go-score" where you can enter the "code" or
+            vulnerability. A "go-right" which shows a correct implementation and a "go-score" where you can enter the
+            "code" or
             "alfalfa" which you found by exploiting the go-left part</p>
 
     </div>
     <div class="row">
         <div class="col-sm"><h2>Go left</h2>
-            <form class="form-group">
+            <form id="goleftform" class="form-group">
                 <label for="exploitableArea">Exploitable area</label>
-                <input type="text" class="form-control" id="exploitableArea" placeholder="Exploit here"/>
+                <input type="text" class="form-control" id="exploitableArea" name="exploitableArea" placeholder="Exploit here"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            <div id="goleft-result"></div>
         </div>
         <div class="col-sm"><h2>Go score</h2>
-            <form class="form-group" target="goscore">
+            <form id="goscoreform" class="form-group">
                 <label for="scoreField">alfalfa code</label>
-                <input type="text" class="form-control" id="scoreField" placeholder=""/>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <input type="text" class="form-control" name="scoreField" id="scoreField" placeholder=""/>
+                <button class="btn btn-primary">Hand in fruits</button>
             </form>
+            <div id="score-result"></div>
         </div>
 
         <div class="col-sm"><h2>Go right</h2>
-            <form class="form-group">
+            <form id="gorightform" class="form-group">
                 <label for="rightArea">Right implementation</label>
-                <input type="text" class="form-control" id="rightArea" placeholder="Exploit here"/>
+                <input type="text" class="form-control" id="rightArea" name="rightArea" placeholder="Exploit here"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
+        <div id="goright-result"></div>
     </div>
 
 </div>
 </div>
+<script>
+    function overridePostPerForm(formID, targetURI, input, targetOutput){
+        document.getElementById(formID).onsubmit = (e) => {
+            e.preventDefault();
+            fetch(targetURI, {
+                method: "POST",
+                headers: {'content-type': 'application/x-www-form-urlencoded'},
+                body: `formValue=${encodeURIComponent(e.target[input].value)}`
+            }).then(r => {
+                console.log(r)
+                if (r.ok) {
+                    r.text().then(text => {
+                        document.getElementById(targetOutput).innerText = text;
+                    })
+                } else {
+                    document.getElementById(targetOutput).innerText = r.statusText;
+                }
+            })
+        }
+    }
+    overridePostPerForm('goscoreform', '/goscore', 'scoreField', 'score-result')
+    overridePostPerForm('goleftform', '/exercise1/left', 'exploitableArea', 'goleft-result')
+    overridePostPerForm('gorightform', '/exercise1/right', 'rightArea', 'goright-result')
+
+</script>
 </body>
+
 </html>

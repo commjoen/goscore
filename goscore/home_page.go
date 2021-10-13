@@ -6,6 +6,7 @@ import (
 
 func (s scoreServer) handleHome() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.logger.Printf("serving Home")
 		http.ServeFile(w,r, "resources/index.html")
 	}
 }
