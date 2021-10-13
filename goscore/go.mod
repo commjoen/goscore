@@ -1,9 +1,8 @@
-module github.com/jeroenwillemsen/goscore
+module github.com/commjoen/goscore
 
-go 1.16
+go 1.17
 
 require (
-	github.com/gorilla/mux v1.8.0
-	github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 // indirect
+	github.com/matryer/is v1.4.0
 	golang.org/x/sys v0.0.0-20211004093028-2c5d950f24ef
 )
