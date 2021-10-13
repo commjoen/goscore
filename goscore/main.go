@@ -36,13 +36,11 @@ func (s scoreServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-func (s scoreServer) routes(){
-	s.router.HandleFunc("/", s.addServerHeader(s.handleHome()))
-}
+
 
 func (s scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request){
-		w.Header().Set("server", "Come and contribute Go server party!")
+		w.Header().Set("server", "Powered by GoScoring!")
 		wrappedHandler(w,r)
 	}
 }
@@ -63,7 +61,7 @@ func run() error {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	log.Println("Server started: running on port 3000")
-	localScoreServer.routes()
+	localScoreServer.Routes()
 	serverPort := ":3000"
 	address := fmt.Sprintf("127.0.0.1%s", serverPort)
 	server := &http.Server{
