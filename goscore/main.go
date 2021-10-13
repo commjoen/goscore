@@ -33,6 +33,7 @@ func main() {
 // Make `myAPI` implement the http.Handler interface(https://golang.org/pkg/net/http/#Handler)
 // use myAPI wherever you could use http.Handler(eg ListenAndServe)
 func (s scoreServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.logger.Printf("Got request"+r.RequestURI)
 	s.router.ServeHTTP(w, r)
 }
 
@@ -40,23 +41,17 @@ func (s scoreServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request){
-		w.Header().Set("server", "Powered by GoScoring!")
+		w.Header().Set("server", "Powered by GoScore!")
 		wrappedHandler(w,r)
 	}
 }
 
-func (s scoreServer) handleHome() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		res := "Hello world"
-		w.Write([]byte(res))
-	}
-}
 
 func run() error {
 	localScoreServer := scoreServer{
 		version: "0.1",
 		router: http.NewServeMux(),
-		logger: log.New(os.Stdout, "logger: ", log.Lshortfile),
+		logger: log.New(os.Stdout, "logger- "+time.Now().String()+": ", log.Lshortfile),
 
 	}
 	ctx, cancel := context.WithCancel(context.Background())
