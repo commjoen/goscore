@@ -45,12 +45,6 @@ func (s scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.Handl
 	}
 }
 
-func (s scoreServer) handleHome() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		res := "Hello world"
-		w.Write([]byte(res))
-	}
-}
 
 func run() error {
 	localScoreServer := scoreServer{

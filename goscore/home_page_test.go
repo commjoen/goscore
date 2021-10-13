@@ -3,10 +3,12 @@ package main
 import (
 	"bytes"
 	"github.com/matryer/is"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -24,4 +26,9 @@ func TestHelloWorld(t *testing.T){
 	w:= httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
 	is.Equal(w.Result().StatusCode, http.StatusOK)
+	out, err := ioutil.ReadAll(w.Result().Body)
+	if err != nil {
+		t.Fatal("error in reading response")
+	}
+	is.True(strings.Contains(string(out), "This is our first welcome page, let's see if it works"))
 }
