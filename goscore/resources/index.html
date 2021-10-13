@@ -52,10 +52,13 @@
         <div class="col-sm"><h2>Go left</h2>
             <form id="goleftform" class="form-group">
                 <label for="exploitableArea">Exploitable area</label>
-                <input type="text" class="form-control" id="exploitableArea" name="exploitableArea" placeholder="Exploit here"/>
+                <input type="text" class="form-control" id="exploitableArea" name="exploitableArea"
+                       placeholder="Exploit here"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            <div id="goleft-result"></div>
+            <div>
+                <div id="goleft-result"></div>
+            </div>
         </div>
         <div class="col-sm"><h2>Go score</h2>
             <form id="goscoreform" class="form-group">
@@ -72,14 +75,17 @@
                 <input type="text" class="form-control" id="rightArea" name="rightArea" placeholder="Exploit here"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            <div>
+                <div id="goright-result"></div>
+            </div>
         </div>
-        <div id="goright-result"></div>
+
     </div>
 
 </div>
 </div>
 <script>
-    function overridePostPerForm(formID, targetURI, input, targetOutput){
+    function overridePostPerForm(formID, targetURI, input, targetOutput) {
         document.getElementById(formID).onsubmit = (e) => {
             e.preventDefault();
             fetch(targetURI, {
@@ -90,7 +96,7 @@
                 console.log(r)
                 if (r.ok) {
                     r.text().then(text => {
-                        document.getElementById(targetOutput).innerText = text;
+                        document.getElementById(targetOutput).innerHTML = text;
                     })
                 } else {
                     document.getElementById(targetOutput).innerText = r.statusText;
@@ -98,6 +104,7 @@
             })
         }
     }
+
     overridePostPerForm('goscoreform', '/goscore', 'scoreField', 'score-result')
     overridePostPerForm('goleftform', '/exercise1/left', 'exploitableArea', 'goleft-result')
     overridePostPerForm('gorightform', '/exercise1/right', 'rightArea', 'goright-result')
