@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//struct score data in memory
+//struct score data in memory TODO: CONTINUE HERE!
 //1. struct
 //2. setup
 //3. conifgure
@@ -45,4 +45,7 @@ func (s *scoreServer) handleScoreSubmit() http.HandlerFunc {
 
 func (s *scoreServer) handleGetNugget1() http.HandlerFunc {
 	s.logger.Printf("Providing first nuget")
+	return func(w http.ResponseWriter, r *http.Request) {
+		//TODO: add run for the actual method
+	}
 }
