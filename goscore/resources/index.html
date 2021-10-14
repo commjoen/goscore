@@ -114,7 +114,7 @@
         window.alert = function() {
             // do something here
             console.log("allert called")
-            //get code!
+            //todo get code and show it on the score-result!
             return proxied.apply(this, arguments);
         };
     })(window.alert);
