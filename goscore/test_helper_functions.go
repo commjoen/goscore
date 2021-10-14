@@ -13,6 +13,5 @@ func iniTestServer() *scoreServer {
 		logger:  log.New(os.Stdout, "logger: ", log.Lshortfile),
 	}
 	srv.Routes()
-	return srv;
+	return srv
 }
-

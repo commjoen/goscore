@@ -1,6 +1,7 @@
 package main
 
 //based on https://github.com/komuw/goweb/blob/fa3829371ee9f8848a30a8e989cf592bb0fccbf7/main.go#L161
+//learnings: always make sure you work with pointers to the server instead of copy by valuein order to reduce memory uage on every method addition.
 import (
 	"context"
 	"fmt"
@@ -15,16 +16,17 @@ import (
 
 type scoreServer struct {
 	version string
-	router 	*http.ServeMux
-	logger *log.Logger
+	router 	*http.ServeMux //note that mux is more performant, but lets start with this. https://github.com/gorilla/mux
+	logger *log.Logger //note; there are idfferent loggers that might make more sense, but let's start basic . https://github.com/uber-go/zap
 }
 
 func main() {
-
-
 	err := run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%+v\n", err)
+		_, err := fmt.Fprintf(os.Stderr, "%+v\n", err)
+		if err != nil {
+			log.Fatal("Error setting error")
+		}
 		os.Exit(1)
 	}
 
@@ -32,14 +34,14 @@ func main() {
 
 // Make `myAPI` implement the http.Handler interface(https://golang.org/pkg/net/http/#Handler)
 // use myAPI wherever you could use http.Handler(eg ListenAndServe)
-func (s scoreServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *scoreServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.logger.Printf("Got request"+r.RequestURI)
 	s.router.ServeHTTP(w, r)
 }
 
 
 
-func (s scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.HandlerFunc{
+func (s *scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request){
 		w.Header().Set("server", "Powered by GoScore!")
 		wrappedHandler(w,r)
@@ -48,11 +50,10 @@ func (s scoreServer) addServerHeader(wrappedHandler http.HandlerFunc) http.Handl
 
 
 func run() error {
-	localScoreServer := scoreServer{
+	localScoreServer := &scoreServer{
 		version: "0.1",
 		router: http.NewServeMux(),
 		logger: log.New(os.Stdout, "logger- "+time.Now().String()+": ", log.Lshortfile),
-
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	log.Println("Server started: running on port 3000")
